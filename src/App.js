@@ -15,6 +15,13 @@ const messageReducer = (state, action) => {
       ...state,
       messages: [...state.messages, action.message],
     },
+    updateUser: {
+      ...state,
+      currentUser: {
+        ...state.currentUser,
+        name: action.username,
+      },
+    },
   };
 
   if (!messageTypes[action.type]) {
@@ -61,11 +68,12 @@ const useSocket = url => {
   return {
     state,
     socketServer,
+    dispatch,
   };
 };
 
 const App = () => {
-  const { state, socketServer } = useSocket('ws://localhost:8000');
+  const { state, socketServer, dispatch } = useSocket('ws://localhost:8000');
 
   const sendMessage = msg => {
     console.log(msg);
@@ -83,6 +91,7 @@ const App = () => {
       type: 'postNotification',
       content: `${state.currentUser.name} has hanged their name to ${username}`,
     };
+    dispatch({ type: 'updateUser', username });
     socketServer.send(JSON.stringify(newNotification));
   };
 
