@@ -11,6 +11,14 @@ const server = app.listen(PORT, () =>
 
 const wss = new SocketServer.Server({ server });
 
+wss.broadcast = function broadcast(data) {
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === SocketServer.OPEN) {
+      client.send(data);
+    }
+  });
+};
+
 wss.on('connection', ws => {
   console.log('Client connected');
 
