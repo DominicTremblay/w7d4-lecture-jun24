@@ -16,6 +16,7 @@ const ChatBar = ({ username: defaultUsername, sendMessage, updateUser }) => {
     const commitKey = event.key === 'Enter' || event.key === 'Tab';
     if (commitKey) {
       sendMessage(msgInput);
+      setMsgInput('');
     }
   };
 

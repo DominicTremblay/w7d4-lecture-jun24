@@ -79,6 +79,11 @@ const App = () => {
 
   const updateUser = username => {
     console.log(username);
+    const newNotification = {
+      type: 'postNotification',
+      content: `${state.currentUser.name} has hanged their name to ${username}`,
+    };
+    socketServer.send(JSON.stringify(newNotification));
   };
 
   return (

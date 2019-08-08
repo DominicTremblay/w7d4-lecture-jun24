@@ -27,7 +27,18 @@ wss.on('connection', ws => {
     const message = JSON.parse(data);
     // add id and type
     message.id = uuidv4();
-    message.type = 'incomingMessage';
+
+    switch (message.type) {
+      case 'postMessage':
+        message.type = 'incomingMessage';
+        break;
+      case 'postNotification':
+        message.type = 'incomingNotification';
+        break;
+      default:
+        throw new Error('Unknown message type');
+    }
+
     // stringify and broadcast
     wss.broadcast(JSON.stringify(message));
   });
