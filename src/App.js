@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect, useReducer } from 'react';
+import './App.scss';
+import NavBar from './NavBar';
+import ChatBar from './ChatBar';
+import MessageList from './MessageList';
+import messages from './lib/messages';
 
-function App() {
+const App = () => {
+  const [state, setState] = useState(messages);
+
+  const sendMessage = () => {};
+
+  const updateUser = () => {};
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NavBar />
+      <MessageList messages={state.messages} />
+      <ChatBar
+        username={state.currentUser.name}
+        sendMessage={sendMessage}
+        updateUser={updateUser}
+      />
     </div>
   );
-}
+};
 
 export default App;
