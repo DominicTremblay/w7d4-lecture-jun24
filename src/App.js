@@ -5,14 +5,15 @@ import ChatBar from './ChatBar';
 import MessageList from './MessageList';
 import messages from './lib/messages';
 
-const App = () => {
+const useSocket = url => {
   const [state, setState] = useState(messages);
   const [socketServer, setSocketServer] = useState(null);
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    setSocketServer(new WebSocket('ws://localhost:8000'));
-  }, []);
+    setSocketServer(new WebSocket(url));
+    setConnected(true);
+  }, [url]);
 
   useEffect(() => {
     if (connected) {
@@ -31,6 +32,15 @@ const App = () => {
       };
     }
   }, [connected, socketServer]);
+
+  return {
+    state,
+    socketServer,
+  };
+};
+
+const App = () => {
+  const { state, socketServer } = useSocket('ws://localhost:8000');
 
   const sendMessage = () => {};
 
