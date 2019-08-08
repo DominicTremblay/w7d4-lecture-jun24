@@ -5,8 +5,27 @@ import ChatBar from './ChatBar';
 import MessageList from './MessageList';
 import messages from './lib/messages';
 
+const messageReducer = (state, action) => {
+  const messageTypes = {
+    incomingMessage: {
+      ...state,
+      messages: [...state.messages, action.message],
+    },
+    incomingNotification: {
+      ...state,
+      messages: [...state.messages, action.message],
+    },
+  };
+
+  if (!messageTypes[action.type]) {
+    throw new Error('Unknown message type');
+  }
+
+  return messageTypes[action.type];
+};
+
 const useSocket = url => {
-  const [state, setState] = useState(messages);
+  const [state, dispatch] = useReducer(messageReducer, messages);
   const [socketServer, setSocketServer] = useState(null);
   const [connected, setConnected] = useState(false);
 
@@ -31,6 +50,7 @@ const useSocket = url => {
         // this.updateMessages(incomingMessage);
       };
     }
+    // return () => (socketServer.onmessage = null);
   }, [connected, socketServer]);
 
   return {
