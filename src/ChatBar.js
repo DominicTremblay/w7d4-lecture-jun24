@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './ChatBar.scss';
 
-const ChatBar = ({ username, sendMessage, updateUser }) => {
-  const handleKeyDown = () => {};
+const ChatBar = ({ username: defaultUsername, sendMessage, updateUser }) => {
+  const [username, setUsername] = useState(defaultUsername || 'Anonymous');
+  const [msgInput, setMsgInput] = useState('');
+
+  const handleUsername = event => {
+    const commitKey = event.key === 'Enter' || event.key === 'Tab';
+    if (commitKey) {
+      updateUser(username);
+    }
+  };
+
+  const handleMessage = event => {
+    const commitKey = event.key === 'Enter' || event.key === 'Tab';
+    if (commitKey) {
+      sendMessage(msgInput);
+    }
+  };
 
   return (
     <footer className="chatbar">
@@ -10,14 +25,17 @@ const ChatBar = ({ username, sendMessage, updateUser }) => {
         className="chatbar-username"
         name="username"
         placeholder="Your Name (Optional)"
-        defaultValue={username}
-        onKeyDown={handleKeyDown}
+        value={username}
+        onChange={event => setUsername(event.target.value)}
+        onKeyDown={handleUsername}
       />
       <input
         className="chatbar-message"
         name="message"
         placeholder="Type a message and hit ENTER"
-        onKeyDown={handleKeyDown}
+        onKeyDown={handleMessage}
+        value={msgInput}
+        onChange={event => setMsgInput(event.target.value)}
       />
     </footer>
   );

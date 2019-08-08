@@ -44,13 +44,18 @@ const useSocket = url => {
   }, [connected, socketServer]);
 
   useEffect(() => {
+    console.log('SocketServer', socketServer);
+
     if (connected) {
       socketServer.onmessage = event => {
         const incomingMessage = JSON.parse(event.data);
-        // this.updateMessages(incomingMessage);
+        console.log('Client reveived: ', incomingMessage);
+        dispatch({ type: incomingMessage.type, message: incomingMessage });
       };
     }
-    // return () => (socketServer.onmessage = null);
+    if (connected) {
+      return () => (socketServer.onmessage = null);
+    }
   }, [connected, socketServer]);
 
   return {
@@ -62,9 +67,19 @@ const useSocket = url => {
 const App = () => {
   const { state, socketServer } = useSocket('ws://localhost:8000');
 
-  const sendMessage = () => {};
+  const sendMessage = msg => {
+    console.log(msg);
+    const newMessage = {
+      type: 'postMessage',
+      content: msg,
+      username: state.currentUser.name,
+    };
+    socketServer.send(JSON.stringify(newMessage));
+  };
 
-  const updateUser = () => {};
+  const updateUser = username => {
+    console.log(username);
+  };
 
   return (
     <div>

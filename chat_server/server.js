@@ -16,8 +16,12 @@ wss.on('connection', ws => {
 
   ws.on('message', data => {
     // parse data
+    const message = JSON.parse(data);
     // add id and type
+    message.id = uuidv4();
+    message.type = 'incomingMessage';
     // stringify and broadcast
+    wss.broadcast(JSON.stringify(message));
   });
 
   ws.on('close', () => {
